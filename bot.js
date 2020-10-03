@@ -11,7 +11,10 @@ client.on("ready", () => {
 
     client.on("message", (msg) => {
         if(msg.author.bot == false && msg.channel.type == 'dm'){
-            if(etfGuild.member(msg.author).roles.cache.find(r => r.name == "Member") != undefined){
+            if(etfGuild.member(msg.author) == null){
+                msg.channel.send("You are not in the ETF Discord server.")
+
+            }else if(etfGuild.member(msg.author).roles.cache.find(r => r.name == "Member") != undefined){
                 msg.channel.send("You have already been given access to the ETF server")
 
             }else{
