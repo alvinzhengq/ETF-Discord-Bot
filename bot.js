@@ -11,33 +11,38 @@ client.on("ready", () => {
 
     client.on("message", (msg) => {
         if(msg.author.bot == false && msg.channel.type == 'dm'){
-            let name = msg.content.toUpperCase();
+            if(etfGuild.member(msg.author).roles.cache.find(r => r.name == "Member") != undefined){
+                msg.channel.send("You have already been given access to the ETF server")
 
-            isVerified(name, (result) => {
-                if(result == "ERROR"){
-                    msg.channel.send("Something went wrong, please message the bot creator: Cox#5431 for help. Error code: CRANKWORKX")
+            }else{
+                let name = msg.content.toUpperCase();
 
-                }else if(result == true){
-                    etfGuild.member(msg.author).setNickname(getProperName(name))
-                    .then(() => {
-                        etfGuild.member(msg.author).roles.add(etfGuild.roles.cache.find(role => role.name == "Member"))
-                        .then(()=>{
-                            msg.channel.send("You have been given access to the ETF server, make sure to read over all the rules!")
+                isVerified(name, (result) => {
+                    if(result == "ERROR"){
+                        msg.channel.send("Something went wrong, please message the bot creator: Cox#5431 for help. Error code: CRANKWORX")
+
+                    }else if(result == true){
+                        etfGuild.member(msg.author).setNickname(getProperName(name))
+                        .then(() => {
+                            etfGuild.member(msg.author).roles.add(etfGuild.roles.cache.find(role => role.name == "Member"))
+                            .then(()=>{
+                                msg.channel.send("You have been given access to the ETF server, make sure to read over all the rules!")
+                            })
+                            .catch(()=>{
+                                msg.channel.send("Something went wrong, please message the bot creator: Cox#5431 for help. Error code: MILLERS")
+                            })
                         })
-                        .catch(()=>{
-                            msg.channel.send("Something went wrong, please message the bot creator: Cox#5431 for help. Error code: MILLERS")
+                        .catch((err)=>{
+                            console.log(err)
+                            msg.channel.send("Something went wrong, please message the bot creator: Cox#5431 for help. Error code: KEVIN")
                         })
-                    })
-                    .catch((err)=>{
-                        console.log(err)
-                        msg.channel.send("Something went wrong, please message the bot creator: Cox#5431 for help. Error code: KEVIN")
-                    })
 
-                }else if(result == false){
-                    msg.channel.send("Name not found, please check if you spelled your name correctly(first and last), or fill out the signup form(http://bit.ly/ETFWebDev) if you haven't already.");
+                    }else if(result == false){
+                        msg.channel.send("Name not found, please check if you spelled your name correctly(first and last), or fill out the signup form(http://bit.ly/ETFWebDev) if you haven't already.");
 
-                }
-            })
+                    }
+                })
+            }
         }
     });
 
